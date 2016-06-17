@@ -9,7 +9,7 @@ import (
     "net/http"
     "io/ioutil"
     "net/url"
-    "fmt"
+    _ "fmt"
     "strings"
 )
 
