@@ -57,7 +57,6 @@ func VerifyRequest(token string) bool {
         return false
     }
 
-    fmt.Println(string(content))
     if string(content)=="TRUE" {
         return true
     }
