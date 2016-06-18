@@ -43,17 +43,20 @@ func generateRandStr(length int) string {
 func VerifyRequest(token string) bool {
     var proxyRequest, err=http.NewRequest("GET", VERIFY_URL+"?token="+token, strings.NewReader(""))
     if err!=nil {
+        fmt.Println(err)
         return false
     }
 
     var proxyResponse, err2=client.Do(proxyRequest)
     if err2!=nil {
+        fmt.Println(err2)
         return false
     }
 
     var content, err3=ioutil.ReadAll(proxyResponse.Body)
     defer proxyResponse.Body.Close()
     if err3!=nil {
+        fmt.Println(err3)
         return false
     }
 
