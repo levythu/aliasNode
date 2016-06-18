@@ -22,11 +22,11 @@ var client *http.Client
 func init() {
     rand.Seed(time.Now().UnixNano())
     client=pipeClient
-    if r, e:=url.Parse(VERIFY_URL); e==nil {
-        if strings.ToLower(r.Scheme)=="https" {
-            client=piptClientSSL
-        }
-    }
+    // if r, e:=url.Parse(VERIFY_URL); e==nil {
+    //     if strings.ToLower(r.Scheme)=="https" {
+    //         client=piptClientSSL
+    //     }
+    // }
 }
 
 
