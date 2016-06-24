@@ -1,0 +1,102 @@
+body {
+    background: #EFEFEF;
+}
+h1 {
+    font-family: Verdana, Geneva, sans-serif;
+    font-weight: lighter;
+    text-align: center;
+}
+.showAndEdit {
+    resize: none;
+    border: solid 1px transparent;
+    padding: 0.05em;
+    border-bottom: solid 1px #999;
+    background: transparent;
+    -webkit-appearance: none;
+    tab-size: 4;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 1em;
+    color: #555;
+    height: 1.3em;
+    display: inline-block;
+    vertical-align: bottom;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.showAndEdit:hover,
+.showAndEdit:active,
+.showAndEdit:focus {
+    outline: 0px !important;
+    -webkit-appearance: none;
+}
+.showAndEdit:focus {
+    border-bottom: solid 1px #2196F3;
+    color: #333;
+}
+
+.stext {
+    width: 20%;
+}
+.vtext {
+    width: 75%;
+    margin-left: 2%;
+}
+
+.tcontainer {
+    max-width: 50em;
+    width:  90%;
+    margin: 0 auto;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+}
+
+@media screen and (max-width: 700px) {
+    .tcontainer {
+        border-left: solid 3px #CCC;
+        padding-left: 5%
+    }
+    .tcontainer:hover {
+        border-left: solid 3px #555;
+    }
+    .stext {
+        width: 50%
+    }
+    .vtext {
+        width: 90%
+    }
+    .vtext {
+        margin-top: 0.4em;
+        margin-left: 0;
+    }
+}
+.plcholder-1em {
+    height: 1em;
+}
+.toast {
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 0.9em;
+    border-radius: 0.1em;
+    box-shadow: 0.1em 0.1em 0.2em #999;
+    color: white;
+    font-family: Verdana, Geneva, sans-serif;
+    font-weight: lighter;
+    max-width: 15em;
+    word-wrap:break-word;
+    margin-bottom: 0.5em;
+    opacity: 1;
+
+    transition:         left 0.30s ease-out,right 0.30s ease-out,top 0.30s ease-out,bottom 0.30s ease-out, opacity 0.30s ease-out;
+    -webkit-transition: left 0.30s ease-out,right 0.30s ease-out,top 0.30s ease-out,bottom 0.30s ease-out, opacity 0.30s ease-out;
+    -ms-transition:     left 0.30s ease-out,right 0.30s ease-out,top 0.30s ease-out,bottom 0.30s ease-out, opacity 0.30s ease-out;
+    -moz-transition:    left 0.30s ease-out,right 0.30s ease-out,top 0.30s ease-out,bottom 0.30s ease-out, opacity 0.30s ease-out;
+}
+.toastUndeclared {
+    opacity: 0;
+}
+.toastContainer {
+    position: fixed;
+    margin-left: 0.5em;
+    bottom: 0px;
+    left: 0px;
+}
