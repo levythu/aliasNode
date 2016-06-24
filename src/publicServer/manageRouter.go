@@ -3,6 +3,7 @@ package main
 import (
     . "github.com/levythu/gurgling"
     "github.com/levythu/gurgling/midwares/cookie"
+    "github.com/levythu/gurgling/midwares/staticfs"
     "math/rand"
     "time"
     "crypto/tls"
@@ -69,6 +70,7 @@ func VerifyRequest(token string) bool {
 
 func CreateManageRouter() Router {
     var r=ARouter().Use(cookie.ASession(generateRandStr(50)))
+
     r.Get("/callback", func(req Request, res Response) {
         if VerifyRequest(req.Query()["token"]) {
             var session=req.F()["session"].(map[string]string)
@@ -78,9 +80,12 @@ func CreateManageRouter() Router {
             res.Redirect("/admin/fail")
         }
     })
+
     r.Get("/fail", func(req Request, res Response) {
         res.Send("Auth fail.")
     })
+
+    // auth
     r.Use(func(req Request, res Response) bool {
         var session=req.F()["session"].(map[string]string)
         if _, ok:=session["user"]; !ok {
@@ -89,9 +94,14 @@ func CreateManageRouter() Router {
             res.Redirect(CREATE_URL+"?"+parameters.Encode())
             return false
         } else {
-            res.Send("Hello!")
-            return false
+            return true
         }
+    })
+
+    r.Use(staticfs.AStaticfs("public"))
+
+    r.Get("/", func(req Request, res Response) {
+        res.Send("Hello!")
     })
 
     return r
