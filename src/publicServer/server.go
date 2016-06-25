@@ -29,9 +29,13 @@ func main() {
         }
 
         if result:=MapGet(flag); result!=nil {
-            desURL.Host=result.Host
-            desURL.Scheme=result.Scheme
-            res.RedirectEX((&desURL).String(), 301)
+            if (result.Path=="" || result.Path=="/") && result.RawQuery=="" && result.Fragment=="" {
+                desURL.Host=result.Host
+                desURL.Scheme=result.Scheme
+                res.RedirectEX((&desURL).String(), 301)
+            } else {
+                res.RedirectEX(result.String(), 301)
+            }
             return false
         } else {
             return true
