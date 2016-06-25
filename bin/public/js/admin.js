@@ -45,6 +45,17 @@ function makeElement(k) {
             modify(thisk, kele[0].value, vele[0].value);
         }
     });
+    kele.keydown(function(e) {
+        var keyc=e.which;
+        if (keyc===13) e.preventDefault();
+    })
+    kele.keyup(function(e) {
+        var keyc=e.which;
+        if (keyc===13) {
+            e.preventDefault();
+            kele.blur();
+        }
+    });
     vele.blur(function() {
         if (vele[0].value=="") {
             if (kele[0].value=="" && thisk!="") {
@@ -58,6 +69,18 @@ function makeElement(k) {
             modify(thisk, kele[0].value, vele[0].value);
         }
     });
+    vele.keydown(function(e) {
+        var keyc=e.which;
+        if (keyc===13)
+            e.preventDefault();
+    })
+    vele.keyup(function(e) {
+        var keyc=e.which;
+        if (keyc===13) {
+            vele.blur();
+            return false;
+        }
+    });
     var tot=$("<div class='tcontainer' id='tentry_"+k+"'>").append(kele).append(vele);
     $("body").append(tot);
 }
@@ -69,14 +92,17 @@ function mapSync() {
     }
 }
 function getList() {
-    $.get("./fakead", function(data) {
-        mapping=JSON.parse(data);
+    $.get("./list", function(data) {
+        if (typeof data=="string") {
+            data=JSON.parse(data);
+        }
+        mapping=data;
         mapSync();
         popUpToast("Successfully refreshed latest list.");
     });
 }
 function modify(oldk, k, v) {
-    $.post("./fakead",
+    $.post("./modify",
     {
         oldk: oldk,
         k: k,

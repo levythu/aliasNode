@@ -4,6 +4,7 @@ import (
     . "github.com/levythu/gurgling"
     "github.com/levythu/gurgling/midwares/cookie"
     "github.com/levythu/gurgling/midwares/staticfs"
+    "github.com/levythu/gurgling/midwares/bodyparser"
     "math/rand"
     "time"
     "crypto/tls"
@@ -61,7 +62,6 @@ func VerifyRequest(token string) bool {
         return false
     }
 
-    fmt.Println(string(content))
     if string(content)=="TRUE" {
         return true
     }
@@ -85,6 +85,10 @@ func CreateManageRouter() Router {
         res.Send("Auth fail.")
     })
 
+    r.Get("/list", func(res Response) {
+        res.JSON(MapDump())
+    })
+
     // auth
     r.Use(func(req Request, res Response) bool {
         var session=req.F()["session"].(map[string]string)
@@ -101,7 +105,43 @@ func CreateManageRouter() Router {
     r.Use(staticfs.AStaticfs("public"))
 
     r.Get("/", func(req Request, res Response) {
-        res.Send("Hello!")
+        res.SendFile("./public/manage.general.html")
+    })
+
+    r.Use("/modify", bodyparser.ABodyParser())
+    r.Post("/modify", func(req Request, res Response) {
+        var bd, ok=req.Body().(url.Values)
+        if (!ok || len(bd["oldk"])==0 || len(bd["k"])==0 || len(bd["v"])==0) {
+            res.SendCode(403)
+            return
+        }
+        var oldk=bd["oldk"][0]
+        var k=bd["k"][0]
+        var v=bd["v"][0]
+        if oldk=="" {
+            if k!="" && v!="" && MapGet(k)==nil {
+                var v2, err=url.Parse(v)
+                if err==nil {
+                    MapSet(k, v2)
+                    res.Send("OK")
+                    return
+                }
+            }
+            res.SendCode(403)
+            return
+        } else {
+            MapSet(oldk, nil)
+            if k!="" && MapGet(k)==nil {
+                var v2, err=url.Parse(v)
+                if err==nil {
+                    MapSet(k, v2)
+                    res.Send("OK")
+                    return
+                }
+            }
+            res.SendCode(204)
+            return
+        }
     })
 
     return r

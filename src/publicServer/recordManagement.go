@@ -6,6 +6,7 @@ import (
     "encoding/json"
     "net/url"
     "fmt"
+    "sync"
 )
 
 //Pay attention that filename is a relative path
@@ -29,6 +30,7 @@ func ReadFileToJSON(filename string) (map[string]string, error) {
 
 var globalMap map[string]*url.URL
 const metadataFilename="data/metadata.json"
+var mapLock=sync.RWMutex{}
 
 func init() {
     var tmp, _=ReadFileToJSON(metadataFilename)
@@ -47,10 +49,14 @@ func init() {
 
 func WriteBack(filename string) error {
 
+    mapLock.RLock()
+
     var tmp=make(map[string]string)
     for k, v:=range globalMap {
         tmp[k]=v.String()
     }
+
+    mapLock.RUnlock()
 
     var data, err=json.Marshal(tmp)
     if err!=nil {
@@ -60,12 +66,35 @@ func WriteBack(filename string) error {
 }
 
 func MapGet(key string) *url.URL {
+    mapLock.RLock()
+    defer mapLock.RUnlock()
+
     return globalMap[key]
 }
 
 func MapSet(key string, val *url.URL) {
-    globalMap[key]=val
+    mapLock.Lock()
+    if val==nil {
+        delete(globalMap, key)
+    } else {
+        globalMap[key]=val
+    }
+    mapLock.Unlock()
+
     if err:=WriteBack(metadataFilename); err!=nil {
         fmt.Println("Writing error:", err);
     }
+}
+
+func MapDump() map[string]string {
+    mapLock.RLock()
+
+    var tmp=make(map[string]string)
+    for k, v:=range globalMap {
+        tmp[k]=v.String()
+    }
+
+    mapLock.RUnlock()
+
+    return tmp
 }
