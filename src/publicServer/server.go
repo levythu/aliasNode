@@ -31,7 +31,7 @@ func main() {
         if result:=MapGet(flag); result!=nil {
             desURL.Host=result.Host
             desURL.Scheme=result.Scheme
-            res.Redirect((&desURL).String())
+            res.RedirectEX((&desURL).String(), 301)
             return false
         } else {
             return true
@@ -44,7 +44,7 @@ func main() {
         if result:=MapGet("."); result!=nil {
             desURL.Host=result.Host
             desURL.Scheme=result.Scheme
-            res.Redirect((&desURL).String())
+            res.RedirectEX((&desURL).String(), 301)
         } else {
             res.Status("NOT FOUND.", 404)
         }
